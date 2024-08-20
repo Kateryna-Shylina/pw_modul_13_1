@@ -8,13 +8,14 @@ from src.database.models import User
 from src.schemas import ContactModel, ContactResponse
 from src.repository import contacts as repository_contacts
 from src.services.auth import auth_service
+from fastapi_limiter.depends import RateLimiter
 
 from datetime import datetime
 
 router = APIRouter(prefix='/contacts', tags=["contacts"])
 
 
-@router.get("/", response_model=List[ContactResponse])
+@router.get("/", response_model=List[ContactResponse], description='No more than 10 requests per minute', dependencies=[Depends(RateLimiter(times=10, seconds=60))])
 async def read_contacts(skip: int = 0, limit: int = 100, db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     contacts = await repository_contacts.get_contacts(skip, limit, current_user, db)
     return contacts
@@ -67,3 +68,5 @@ async def search_contacts(query: str, db: Session = Depends(get_db), current_use
 async def get_birthdays(db: Session = Depends(get_db), current_user: User = Depends(auth_service.get_current_user)):
     contacts = await repository_contacts.get_upcoming_birthdays(current_user, db)
     return contacts
+
+

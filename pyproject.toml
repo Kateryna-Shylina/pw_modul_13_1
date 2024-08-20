@@ -17,6 +17,11 @@ python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 python-multipart = "^0.0.9"
 fastapi-mail = "^1.4.1"
+python-dotenv = "^1.0.1"
+pydantic-settings = "^2.4.0"
+fastapi-limiter = "^0.1.6"
+slowapi = "^0.1.9"
+cloudinary = "^1.41.0"
 
 
 [build-system]
